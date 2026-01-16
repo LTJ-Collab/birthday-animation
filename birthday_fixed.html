@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 生日祝福特效 🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background: #ff8e9e;
+        }
+        
+        /* 消息框 */
+        .message {
+            position: absolute;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 18px;
+            text-align: center;
+            max-width: 150px;
+            word-wrap: break-word;
+            transition: all 0.5s;
+        }
+        
+        /* 容器 */
+        #container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        /* 标题 */
+        #title {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <button class="btn" id="startBtn">开始播放</button>
+        <button class="btn" id="resetBtn">重新开始</button>
+    </div>
+    
+    <!-- 标题 -->
+    <div id="title">王梦晴生日快乐</div>
+    
+    <!-- 消息容器 -->
+    <div id="container"></div>
+    
+    <script>
+        // 祝福语
+        const messages = [
+            "多喝水利", "好好爱自己", "好好吃饭", "保持好心情", 
+            "我想你了", "顺顺利利", "别熬夜", "天凉了多穿衣服", "小猪天天开心"
+        ];
+        
+        // 颜色
+        const colors = ["#ff6b8b", "#ff8e9e", "#ffd166", "#06d6a0", "#118ab2"];
+        
+        console.log("脚本开始执行");
+        
+        // 获取元素
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const container = document.getElementById('container');
+        const title = document.getElementById('title');
+        
+        console.log("获取到的元素:", {startBtn, resetBtn, container, title});
+        
+        // 开始动画
+        function startAnimation() {
+            console.log("开始动画函数被调用");
+            alert("开始动画！");
+            
+            // 显示标题
+            title.style.opacity = '1';
+            title.style.transition = 'opacity 1s';
+            
+            // 创建简单的心形
+            createSimpleHeart();
+            
+            // 创建随机消息
+            setTimeout(() => {
+                createRandomMessages();
+            }, 2000);
+            
+            // 最终效果
+            setTimeout(() => {
+                showFinalMessage();
+            }, 5000);
+        }
+        
+        // 创建简单心形
+        function createSimpleHeart() {
+            console.log("创建心形");
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 创建心形点
+            const points = 20;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            for (let i = 0; i < points; i++) {
+                const angle = i / points * 2 * Math.PI;
+                const x = 16 * Math.pow(Math.sin(angle), 3);
+                const y = 13 * Math.cos(angle) - 5 * Math.cos(2*angle) - 2 * Math.cos(3*angle) - Math.cos(4*angle);
+                
+                const screenX = centerX + x * 15;
+                const screenY = centerY - y * 15;
+                
+                // 创建消息框
+                const message = document.createElement('div');
+                message.className = 'message';
+                message.textContent = messages[i % messages.length];
+                message.style.background = colors[i % colors.length];
+                message.style.left = screenX + 'px';
+                message.style.top = screenY + 'px';
+                message.style.opacity = '0';
+                message.style.transform = 'scale(0)';
+                
+                container.appendChild(message);
+                
+                // 动画效果
+                setTimeout(() => {
+                    message.style.transition = 'all 0.5s';
+                    message.style.opacity = '1';
+                    message.style.transform = 'scale(1)';
+                }, i * 100);
+            }
+        }
+        
+        // 创建随机消息
+        function createRandomMessages() {
+            console.log("创建随机消息");
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * (window.innerWidth - 150);
+                    const y = Math.random() * (window.innerHeight - 100);
+                    
+                    const message = document.createElement('div');
+                    message.className = 'message';
+                    message.textContent = messages[Math.floor(Math.random() * messages.length)];
+                    message.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    message.style.left = x + 'px';
+                    message.style.top = y + 'px';
+                    message.style.opacity = '0';
+                    message.style.transform = 'scale(0)';
+                    
+                    container.appendChild(message);
+                    
+                    setTimeout(() => {
+                        message.style.transition = 'all 0.5s';
+                        message.style.opacity = '1';
+                        message.style.transform = 'scale(1)';
+                    }, 50);
+                }, i * 100);
+            }
+        }
+        
+        // 显示最终消息
+        function showFinalMessage() {
+            console.log("显示最终消息");
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 创建最终消息
+            const finalMsg = document.createElement('div');
+            finalMsg.className = 'message';
+            finalMsg.textContent = "🎂 生日快乐！ 🎂";
+            finalMsg.style.background = 'linear-gradient(45deg, #ff6b8b, #ff8e9e)';
+            finalMsg.style.color = 'white';
+            finalMsg.style.fontSize = '24px';
+            finalMsg.style.padding = '30px';
+            finalMsg.style.left = '50%';
+            finalMsg.style.top = '50%';
+            finalMsg.style.transform = 'translate(-50%, -50%)';
+            finalMsg.style.opacity = '0';
+            
+            container.appendChild(finalMsg);
+            
+            setTimeout(() => {
+                finalMsg.style.transition = 'all 1s';
+                finalMsg.style.opacity = '1';
+                finalMsg.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            }, 100);
+        }
+        
+        // 重置动画
+        function resetAnimation() {
+            console.log("重置动画");
+            container.innerHTML = '';
+            title.style.opacity = '0';
+        }
+        
+        // 绑定事件
+        console.log("绑定事件前");
+        startBtn.addEventListener('click', startAnimation);
+        resetBtn.addEventListener('click', resetAnimation);
+        console.log("事件绑定完成");
+        
+        // 页面加载提示
+        window.addEventListener('load', () => {
+            console.log("页面加载完成");
+            alert("页面加载完成！点击'开始播放'按钮观看动画。");
+        });
+    </script>
+</body>
+</html>
